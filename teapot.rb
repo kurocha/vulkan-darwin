@@ -4,19 +4,20 @@
 
 teapot_version "3.0"
 
-define_target "vulkan-sdk-darwin" do |target|
-	target.depends :platform
-	target.depends "Build/Files"
-	target.depends "Build/Make"
+define_target "vulkan-library" do |target|
+	target.depends "SDK/Vulkan", public: true
 	
-	target.provides "SDK/Vulkan" do
+	target.provides "Library/vulkan" do
 		append linkflags(target.package.path + "lib/osx/libMoltenVK.a")
 		append header_search_paths(target.package.path + "source")
 	end
 end
 
-define_configuration "moltenvk" do |configuration|
-	configuration.public!
+define_target 'vulkan-platform-macos' do |target|
+	target.provides 'Vulkan/Platform/macOS' do
+		append buildflags "-DVK_USE_PLATFORM_MACOS_KHR"
+		append linkflags %W{-framework Metal -framework IOSurface -framework Cocoa -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Foundation}
+	end
 	
-	configuration.require "build-make"
+	target.provides :vulkan_platform => 'Vulkan/Platform/macOS'
 end
