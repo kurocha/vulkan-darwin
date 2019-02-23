@@ -14,6 +14,8 @@ define_target "vulkan-library" do |target|
 end
 
 define_target 'vulkan-platform-macos' do |target|
+	target.priority = 10
+	
 	target.provides 'Vulkan/Platform/macOS' do
 		append buildflags "-DVK_USE_PLATFORM_MACOS_MVK"
 		append linkflags %W{-framework Metal -framework IOSurface -framework Cocoa -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Foundation}
