@@ -1,7 +1,7 @@
 /*
  * mvk_vulkan.h
  *
- * Copyright (c) 2014-2019 The Brenwill Workshop Ltd. (http://www.brenwill.com)
+ * Copyright (c) 2015-2022 The Brenwill Workshop Ltd. (http://www.brenwill.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,13 @@
 
 
 /** 
- * This is a convenience header file that loads vulkan.h with the appropriate MoltenVK
- * Vulkan platform extensions automatically enabled for iOS or macOS.
+ * This is a convenience header file that loads vulkan.h with the appropriate Vulkan platform extensions.
  *
- * When building for iOS, this header automatically enables the VK_MVK_ios_surface Vulkan extension.
- * When building for macOS, this header automatically enables the VK_MVK_macos_surface Vulkan extension.
+ * This header automatically enables the VK_EXT_metal_surface Vulkan extension.
+ *
+ * When building for iOS, this header also automatically enables the obsolete VK_MVK_ios_surface Vulkan extension.
+ * When building for macOS, this header also automatically enables the obsolete VK_MVK_macos_surface Vulkan extension.
+ * Both of these extensions are obsolete. Consider using the portable VK_EXT_metal_surface extension instead.
  */
 
 #ifndef __mvk_vulkan_h_
@@ -30,6 +32,10 @@
 
 
 #include <Availability.h>
+
+#define VK_USE_PLATFORM_METAL_EXT				1
+
+#define VK_ENABLE_BETA_EXTENSIONS				1		// VK_KHR_portability_subset
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 #	define VK_USE_PLATFORM_IOS_MVK				1
@@ -40,6 +46,5 @@
 #endif
 
 #include <vulkan/vulkan.h>
-#include <vulkan-portability/vk_extx_portability_subset.h>
 
 #endif

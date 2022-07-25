@@ -4,22 +4,37 @@
 
 teapot_version "3.0"
 
-define_target "vulkan-library" do |target|
-	target.depends "SDK/Vulkan", public: true
-	
-	target.provides "Library/vulkan" do
-		append linkflags(target.package.path + "lib/osx/libMoltenVK.a")
-		append header_search_paths(target.package.path + "source")
-	end
+define_project "vulkan-sdk-darwin" do |project|
+	project.add_author "Samuel Williams"
+	project.license = " Apache License, Version 2.0 / MIT License"
+
+	project.version = "1.3.216"
 end
 
-define_target 'vulkan-platform-macos' do |target|
-	target.priority = 10
-	
-	target.provides 'Vulkan/Platform/macOS' do
+define_target 'vulkan-sdk-darwin-library' do |target|
+	target.provides 'Vulkan/SDK/Darwin/Library' do
+		append header_search_paths(target.package.path + "source")		
+		append linkflags(
+			"-framework", "CoreFoundation",
+			"-framework", "Foundation",
+			"-framework", "IOSurface",
+			"-framework", "Metal",
+			"-framework", "Cocoa",
+			"-framework", "QuartzCore",
+			"-framework", "IOKit",
+			target.package.path + "lib/macos-arm64_x86_64/libMoltenVK.a"
+		)
+	end
+
+	target.provides :vulkan_library => 'Vulkan/SDK/Darwin/Library'
+end
+
+define_target 'vulkan-sdk-darwin-platform' do |target|
+	target.depends 'Vulkan/SDK/Darwin/Library', public: true
+
+	target.provides 'Vulkan/SDK/Darwin/Platform' do
 		append buildflags "-DVK_USE_PLATFORM_MACOS_MVK"
-		append linkflags %W{-framework Metal -framework IOSurface -framework Cocoa -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Foundation}
 	end
 	
-	target.provides :vulkan_platform => 'Vulkan/Platform/macOS'
+	target.provides :vulkan_platform => 'Vulkan/SDK/Darwin/Platform'
 end
