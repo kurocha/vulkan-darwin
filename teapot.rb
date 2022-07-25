@@ -4,15 +4,15 @@
 
 teapot_version "3.0"
 
-define_project "vulkan-sdk-darwin" do |project|
+define_project "vulkan-darwin" do |project|
 	project.add_author "Samuel Williams"
 	project.license = " Apache License, Version 2.0 / MIT License"
 
 	project.version = "1.3.216"
 end
 
-define_target 'vulkan-sdk-darwin-library' do |target|
-	target.provides 'Vulkan/SDK/Darwin/Library' do
+define_target 'vulkan-darwin-library' do |target|
+	target.provides 'Library/Vulkan/Darwin' do
 		append header_search_paths(target.package.path + "source")		
 		append linkflags(
 			"-framework", "CoreFoundation",
@@ -26,15 +26,15 @@ define_target 'vulkan-sdk-darwin-library' do |target|
 		)
 	end
 
-	target.provides :vulkan_library => 'Vulkan/SDK/Darwin/Library'
+	target.provides :vulkan_library => 'Library/Vulkan/Darwin'
 end
 
-define_target 'vulkan-sdk-darwin-platform' do |target|
-	target.depends 'Vulkan/SDK/Darwin/Library', public: true
+define_target 'vulkan-darwin-platform' do |target|
+	target.depends 'Library/Vulkan/Darwin', public: true
 
-	target.provides 'Vulkan/SDK/Darwin/Platform' do
+	target.provides 'Platform/Vulkan/Darwin' do
 		append buildflags "-DVK_USE_PLATFORM_MACOS_MVK"
 	end
 	
-	target.provides :vulkan_platform => 'Vulkan/SDK/Darwin/Platform'
+	target.provides :vulkan_platform => 'Platform/Vulkan/Darwin'
 end
